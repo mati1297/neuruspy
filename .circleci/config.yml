@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@3.2.3
+
 jobs:
   test:
     docker:
@@ -13,7 +16,9 @@ jobs:
           name: Test
           command:  |
                   pip install pytest
-                  pytest
+                  pip install pytest-cov
+                  pytest --cov neuruspy/
+      - codecov/upload
   docs-build:
     docker:
       - image: python:3.7
