@@ -14,10 +14,57 @@ jobs:
           command:  |
                   pip install pytest
                   pytest
+  docs-build:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Build docs
+          command: |
+                  pip install sphinx sphinx-rtd-theme
+                  cd docs/ && make html
+      - persist_to_workspace:
+          root: docs/build
+          paths: html
+  docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "b8:05:cb:43:0f:7b:b4:de:3a:35:8e:30:e0:8d:44:a5"
+      - attach_workspace:
+          at: docs/build
+      - run:
+          name: Disable jekyll builds
+          command: touch docs/build/html/.nojekyll
+      - run:
+          name: Install and configure dependencies
+          command: |
+                  npm install -g --silent gh-pages@2.0.1
+                  git config user.email "mcharrut@fi.uba.ar"
+                  git config user.name "ci-build"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist docs/build/html
 
 
 workflows:
   version: 2.1
-  build:
-    jobs:
+  build: 
+    jobs: 
       - test
+      - docs-build
+      - docs-deploy:
+            requires:
+              - test
+              - docs-build
+            filters:
+              branches:
+                only: 
+                  - main
