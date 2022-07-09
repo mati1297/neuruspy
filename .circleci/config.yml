@@ -7,13 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install dependencies
-        command: pip install -r requirements.txt
+          name: Install dependencies
+          command: pip install -r requirements.txt
       - run:
-        name: Test
-        command:  |
-                pip install pytest
-                pytest
+          name: Test
+          command:  |
+                  pip install pytest
+                  pytest
 
 
 workflows:
