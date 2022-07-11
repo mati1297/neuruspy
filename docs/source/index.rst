@@ -6,15 +6,12 @@
 Welcome to NeurusPy's documentation!
 ====================================
 
+NeurusPy is a set of implementations of neural networks, machine learning and optimization algorithms, developed by me while studying subjects on this topics.
+
+It is also an excuse to practice Python continous integration with CircleCI and automatic documentation with Sphinx and GitHub Pages.
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    modules
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
