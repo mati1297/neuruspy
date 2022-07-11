@@ -12,29 +12,27 @@ class ActivationFunction:
     def forward(x_values):
         """Activation function for foward propagation.
         """
-        pass
 
     @staticmethod
     @abstractmethod
     def back(x_values):
         """Derivative of the activation function for backpropagation.
         """
-        pass
 
 class Tanh(ActivationFunction):
     """Hyperbolic tangent activation function.
     """
     @staticmethod
-    def forward(x):
+    def forward(x_values):
         """Activation function for foward propagation.
         """
-        return np.tanh(x)
-    
+        return np.tanh(x_values)
+
     @staticmethod
-    def back(x):
+    def back(x_values):
         """Derivative of the activation function for backpropagation.
         """
-        return 1 - np.tanh(x)**2
+        return 1 - np.tanh(x_values)**2
 
 class Relu(ActivationFunction):
     """Rectified linear unit (RELu) activation function.
@@ -50,3 +48,4 @@ class Relu(ActivationFunction):
         """Derivative of the activation function for backpropagation.
         """
         return (x_values > 0) * 1
+        

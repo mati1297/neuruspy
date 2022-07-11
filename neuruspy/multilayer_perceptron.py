@@ -8,45 +8,43 @@ from neuruspy.activation import ActivationFunction
 class Layer:
     """Fully connected layer implementation.
 
-    Fully connected layer implementation. It allows to create a layer, train 
+    Fully connected layer implementation. It allows to create a layer, train
     it by gradient descent and backpropagation and predict values with it.
 
     Attributes:
-        activation_function (ActivationFunction): Activation function of the 
+        activation_function (ActivationFunction): Activation function of the
              layer.
     """
-    def __init__(self, n_inputs: int, n_outputs: int,
+    def __init__(self, n_io: tuple,
                     activation_function: ActivationFunction,
-                    initial_w: np.ndarray=None, w_random_low:float=-1,
-                    w_random_high=1):
+                    initial_w: np.ndarray=None, w_random_lims: tuple=(-1, 1)):
         """Initialize a Layer instance.
 
-        Initialize a Layer instance. If a initial weight matrix is not 
-        provided, it is filled with random numbers from a uniform 
+        Initialize a Layer instance. If a initial weight matrix is not
+        provided, it is filled with random numbers from a uniform
         distribution.
 
         Args:
-            n_inputs (int): Number of inputs.
-            n_outputs (int): Number of outputs.
+            n_io (tuple): Tuple of ints with number of inputs and outputs
+                respectively.
             activation_function (ActivationFunction): Activation function of the
-                 layer.
+                layer.
             initial_w (ndarray): Initial values of the weight matrix. If not
                 specified, are generated randomly.
-            w_random_low (float): Lower value of the uniform distribution for
-                random initialization of weight matrix.
-            w_random_high (float): Lower value of the uniform distribution for
-                random initialization of weight matrix.
+            w_random_lims (tuple): Tuple of floats with lower and higher value
+                of the uniform distribution  for random initialization of
+                weight matrix.
         """
-        self._n_inputs = n_inputs
-        self._n_outputs = n_outputs
+        self._n_inputs = n_io[0]
+        self._n_outputs = n_io[1]
         self._activation_function = activation_function
         if initial_w is None:
-            self._w = np.random.default_rng().uniform(w_random_low,
-                                                        w_random_high,
-                                                        (n_outputs,
-                                                        self.n_inputs+1))
+            self._w = np.random.default_rng().uniform(w_random_lims[0],
+                                                        w_random_lims[1],
+                                                        (self._n_outputs,
+                                                        self._n_inputs+1))
         else:
-            if initial_w.shape != (n_outputs, n_inputs+1):
+            if initial_w.shape != (self._n_outputs, self._n_inputs+1):
                 raise ValueError("W shape does not match with layer inputs and "\
                                     "outputs.")
             self._w = initial_w
@@ -57,7 +55,7 @@ class Layer:
         Add bias column to input data if is neccesary.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
 
         Returns:
@@ -73,7 +71,7 @@ class Layer:
         Predicts an output for the input data, evaluating the layer
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
 
         Returns:
@@ -85,15 +83,15 @@ class Layer:
     def predict_h(self, input_data):
         """Predicts an output for the input data without activation function.
 
-        Predicts an output for the input data without evaluating the 
+        Predicts an output for the input data without evaluating the
         activation function.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
 
         Returns:
-            ndarray: A two dimensional array with samples' output as rows and 
+            ndarray: A two dimensional array with samples' output as rows and
             variables as columns.
         """
         input_data = self._add_bias(input_data)
@@ -106,9 +104,9 @@ class Layer:
         Updates weight matrix and calculates delta for previous layer.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
-            next_layer_delta (ndarray): Delta of the next layer, to 
+            next_layer_delta (ndarray): Delta of the next layer, to
                 backpropagate.
             eta (float): Learning constant.
 
@@ -126,7 +124,7 @@ class Layer:
         return prev_layer_delta[:, 1:]
 
     @property
-    def w(self):
+    def w_matrix(self):
         """Weight matrices.
 
         Returns:
@@ -154,7 +152,7 @@ class Layer:
 
 class MultilayerPerceptron:
     """Multilayer Perceptron implementation.
-    
+
     Multilayer Perceptron implementation. It allows to create a multilayer
     perceptron by chaining different layers (represented by class Layer
     instances), train it and predict new results using it.
@@ -191,7 +189,7 @@ class MultilayerPerceptron:
         Predicts an output for the input data, evaluating the newtork.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
 
         Returns:
@@ -210,11 +208,11 @@ class MultilayerPerceptron:
         network.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
 
         Returns:
-            list: A list of two dimensional array with samples' outputs rows 
+            list: A list of two dimensional array with samples' outputs rows
             and variables as columns for every layer.
         """
         output = [input_data]
@@ -222,7 +220,7 @@ class MultilayerPerceptron:
             output.append(layer.predict(output[-1]))
         return output[1:]
 
-    def evaluate(self, input_data: np.ndarray, 
+    def evaluate(self, input_data: np.ndarray,
                     desired_output_data: np.ndarray):
         """Predicts and evaluates output for the input data.
 
@@ -230,7 +228,7 @@ class MultilayerPerceptron:
         squared error from the desired output.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
             desired_output_data (ndarray): Two dimensional array with desired
                 outputs as rows and variables as columns.
@@ -249,9 +247,9 @@ class MultilayerPerceptron:
         backpropagation while the squared mean error for every iteration.
 
         Args:
-            input_data (ndarray): Two dimensional array with samples as rows 
+            input_data (ndarray): Two dimensional array with samples as rows
                 and variables as columns.
-            desired_output_data (ndarray): Two dimensional array with desired 
+            desired_output_data (ndarray): Two dimensional array with desired
                 outputs as rows and variables as columns.
             eta (float): Learning constant. By default is set 0.01.
             max_iterations (int): Maximum number of iterations of the
@@ -275,7 +273,7 @@ class MultilayerPerceptron:
 
             for i in reversed(range(0, self.n_layers)):
                 next_layer_delta = self._layers[i]. \
-                                    backpropagate(internal_outputs[i], 
+                                    backpropagate(internal_outputs[i],
                                                   next_layer_delta, eta)
 
             last_error = self.evaluate(input_data, desired_output_data)
@@ -289,7 +287,7 @@ class MultilayerPerceptron:
     @property
     def n_layers(self):
         """Number of layers of the perceptron.
-        
+
         Returns:
             int: number of layers.
         """
@@ -305,7 +303,7 @@ class MultilayerPerceptron:
         return not self.n_layers
 
     @property
-    def w(self):
+    def w_matrixes(self):
         """List of weight matrices of the layers of the perceptron.
 
         Returns:
@@ -313,5 +311,5 @@ class MultilayerPerceptron:
         """
         w_output = []
         for layer in self._layers:
-            w_output.append(layer.w)
+            w_output.append(layer.w_matrix)
         return w_output
