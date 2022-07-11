@@ -262,7 +262,7 @@ class MultilayerPerceptron:
         """
         error = []
 
-        last_error = self.evaluate(input_data, desired_data)
+        last_error = self.evaluate(input_data, desired_output_data)
         error.append(last_error)
 
         iteration = 0
