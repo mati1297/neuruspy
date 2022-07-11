@@ -5,3 +5,4 @@ neuruspy
    :maxdepth: 4
 
    neuruspy
+   tests
