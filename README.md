@@ -10,3 +10,4 @@ It is also an excuse to practice Python continous integration with CircleCI and 
 [Documentation](https://mati1297.github.io/neuruspy)
 
 [Repository](https://github.com/mati1297/neuruspy)
+
