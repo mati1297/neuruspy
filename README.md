@@ -7,6 +7,6 @@ NeurusPy is a set of implementations of neural networks, machine learning and op
 
 It is also an excuse to practice Python continous integration with CircleCI and automatic documentation with Sphinx and GitHub Pages.
 
-[Documentation](https://mati1297.github.io/neuruspy)
+<a href="https://mati1297.github.io/neuruspy" target="_blank">Documentation</a>
 
-[Repository](https://github.com/mati1297/neuruspy)
+<a href="https://github.com/mati1297/neuruspy" target="_blank">Repository</a>
