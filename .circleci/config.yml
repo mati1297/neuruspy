@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: pip install
+          command: pip install .
       - run:
           name: Test
           command:  |
@@ -39,7 +39,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: pip install
+          command: pip install .
       - run:
           name: Build docs
           command: |
