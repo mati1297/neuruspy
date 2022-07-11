@@ -15,7 +15,7 @@ class Layer:
         activation_function (ActivationFunction): Activation function of the 
              layer.
     """
-    def __init__(self, n_inputs, n_outputs,
+    def __init__(self, n_inputs: int, n_outputs: int,
                     activation_function: ActivationFunction,
                     initial_w: np.ndarray=None, w_random_low:float=-1,
                     w_random_high=1):
